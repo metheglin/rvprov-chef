@@ -1,0 +1,20 @@
+[mysqld]
+<% 
+  node['mysql']['conf']['mysqld'].each do |key,value|
+    puts "#{key}=#{value}"
+  end
+%>
+
+[mysqld_safe]
+<% 
+  node['mysql']['conf']['mysqld_safe'].each do |key,value|
+    puts "#{key}=#{value}"
+  end
+%>
+
+[mysql]
+<% 
+  node['mysql']['conf']['mysql'].each do |key,value|
+    puts "#{key}=#{value}"
+  end
+%>
