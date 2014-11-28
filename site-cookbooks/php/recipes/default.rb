@@ -36,10 +36,11 @@ cookbook_file "/etc/yum.repos.d/epel.repo" do
   mode 00644
 end
 
-cookbook_file "#{node['php']['src_dir']}#{node['php']['version']}.tar.gz" do
-  source "#{node['php']['version']}.tar.gz"
-  mode 0644
-end
+# They should be downloaded by wget because of too large to mange under the Git
+# cookbook_file "#{node['php']['src_dir']}#{node['php']['version']}.tar.gz" do
+#   source "#{node['php']['version']}.tar.gz"
+#   mode 0644
+# end
 
 cookbook_file "#{node['php']['src_dir']}#{node['libiconv']['version']}.tar.gz" do
   source "#{node['libiconv']['version']}.tar.gz"
@@ -97,6 +98,7 @@ bash "install php" do
   cwd      node['php']['src_dir']
   not_if   "which php"
   code   <<-EOH
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['php']['version']}.tar.gz"
     tar xzf #{node['php']['version']}.tar.gz
     cd #{node['php']['version']}
     ./configure #{configure}

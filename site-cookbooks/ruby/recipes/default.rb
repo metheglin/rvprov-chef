@@ -7,15 +7,17 @@
 # All rights reserved - Do Not Redistribute
 #
 
-cookbook_file "#{node['ruby']['src_dir']}#{node['ruby']['version']}.tar.gz" do
-  mode 0644
-end
+# They should be downloaded by wget because of too large to mange under the Git
+# cookbook_file "#{node['ruby']['src_dir']}#{node['ruby']['version']}.tar.gz" do
+#   mode 0644
+# end
 
 bash "install ruby" do
   user     node['ruby']['install_user']
   cwd      node['ruby']['src_dir']
   not_if   "ls #{node['ruby']['dir']}"
   code   <<-EOH
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['ruby']['version']}.tar.gz"
     tar xzf #{node['ruby']['version']}.tar.gz
     cd #{node['ruby']['version']}
     ./configure --prefix=#{node['ruby']['dir']}

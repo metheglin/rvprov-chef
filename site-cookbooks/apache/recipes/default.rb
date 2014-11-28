@@ -15,17 +15,18 @@ yum_package "openssl-devel" do
   action :install
 end
 
-cookbook_file "#{node['apache']['src_dir']}#{node['apr']['version']}.tar.gz" do
-  mode 0644
-end
-
-cookbook_file "#{node['apache']['src_dir']}#{node['apr_util']['version']}.tar.gz" do
-  mode 0644
-end
-
-cookbook_file "#{node['apache']['src_dir']}#{node['apache']['version']}.tar.gz" do
-  mode 0644
-end
+# They should be downloaded by wget because of too large to mange under the Git
+# cookbook_file "#{node['apache']['src_dir']}#{node['apr']['version']}.tar.gz" do
+#   mode 0644
+# end
+# 
+# cookbook_file "#{node['apache']['src_dir']}#{node['apr_util']['version']}.tar.gz" do
+#   mode 0644
+# end
+# 
+# cookbook_file "#{node['apache']['src_dir']}#{node['apache']['version']}.tar.gz" do
+#   mode 0644
+# end
 
 bash "install apache" do
   user     node['apache']['install_user']
@@ -33,10 +34,13 @@ bash "install apache" do
   not_if   "ls #{node['apache']['dir']}"
   notifies :run, 'bash[start apache]', :immediately
   code   <<-EOH
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['apache']['version']}.tar.gz"
     tar xzf #{node['apache']['version']}.tar.gz
     
     ## apache2.4 requires apr, apr-util
     ## httpd automaticall build the decompressed apr and apr-util under the srclib dir
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['apr']['version']}.tar.gz"
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['apr_util']['version']}.tar.gz"
     tar xzf #{node['apr']['version']}.tar.gz
     tar xzf #{node['apr_util']['version']}.tar.gz
     mv #{node['apr']['version']} #{node['apache']['version']}/srclib/apr

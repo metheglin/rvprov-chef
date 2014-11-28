@@ -7,9 +7,10 @@
 # All rights reserved - Do Not Redistribute
 #
 
-cookbook_file "#{node['mysql']['src_dir']}#{node['mysql']['version']}.tar.gz" do
-  mode 0644
-end
+# They should be downloaded by wget because of too large to mange under the Git
+# cookbook_file "#{node['mysql']['src_dir']}#{node['mysql']['version']}.tar.gz" do
+#   mode 0644
+# end
 
 bash "install mysql" do
   user     node['mysql']['install_user']
@@ -17,6 +18,7 @@ bash "install mysql" do
   not_if   "ls #{node['mysql']['dir']}"
   #notifies :run, 'bash[start mysql]', :immediately
   code   <<-EOH
+    wget "http://file.agile.reivo.co.jp/middlewares/#{node['mysql']['version']}.tar.gz"
     tar xzf #{node['mysql']['version']}.tar.gz
     mv #{node['mysql']['version']} #{node['mysql']['dir']}
   EOH
