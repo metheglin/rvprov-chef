@@ -12,6 +12,10 @@
 #   mode 0644
 # end
 
+yum_package "zlib-devel"
+yum_package "openssl-devel"
+yum_package "wget"
+
 bash "install ruby" do
   user     node['ruby']['install_user']
   cwd      node['ruby']['src_dir']
